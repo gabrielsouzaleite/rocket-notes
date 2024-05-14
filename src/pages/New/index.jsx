@@ -16,7 +16,7 @@ import { Container, Form } from './styles';
 
 export function New() {
   const [title, setTitle] = useState("");
-  const [descriprion, setDescription] = useState("");
+  const [description, setDescription] = useState("");
 
 
   const [links, setLinks] = useState([]);
@@ -27,7 +27,7 @@ export function New() {
 
   const navigate = useNavigate();
 
-  function handleAtLink() {
+  function handleAddLink() {
     setLinks(prevState => [...prevState, newLink]);
     setNewLink("");
   }
@@ -46,9 +46,21 @@ export function New() {
   }
 
   async function handleNewNote() {
+    if(!title) {
+      return alert("Digite o título da nota");
+    }
+    
+    if(newLink) {
+      return alert("Você deixou um link no campo adicionar, mas não clicou em adicionar. Clique para adicionar ou deixe o campo vazio.");
+    }
+
+    if(newTag) {
+      return alert("Você deixou uma tag no campo adicionar, mas não clicou em adicionar. Clique para adicionar ou deixe o campo vazio.");
+    }
+
     await api.post("/notes", {
       title,
-      decription,
+      description,
       tags,
       links
     });
@@ -79,37 +91,37 @@ export function New() {
 
           <Section title="Links úteis">
             {
-              links.map((link, index) => {
+              links.map((link, index) => (
                 <NoteItem
                   key={String(index)}
                   value={link}
                   onClick={() => handleRemoveLink(link)}
                 />
-              })
+              ))
             }
 
-            < NoteItem
-              isNew
+            <NoteItem
+              $isNew
               placeholder="Novo link"
               value={newLink}
               onChange={e => setNewLink(e.target.value)}
-              onClick={handleAtLink}
+              onClick={handleAddLink}
             />
           </Section>
 
           <Section title="Marcadores">
             <div className="tags">
               {
-                tags.map((tag, index) => {
+                tags.map((tag, index) => (
                   <NoteItem
                     key={String(index)}
                     value={tag}
                     onClick={() => handleRemoveTag(tag)}
                   />
-                })
+                ))
               }
               <NoteItem
-                isNew
+                $isNew
                 placeholder="Nova tag"
                 onChange={e => setNewTag(e.target.value)}
                 value={newTag}
