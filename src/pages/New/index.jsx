@@ -27,6 +27,10 @@ export function New() {
 
   const navigate = useNavigate();
 
+  function handleBack() {
+    navigate(-1);
+  }
+
   function handleAddLink() {
     setLinks(prevState => [...prevState, newLink]);
     setNewLink("");
@@ -66,7 +70,7 @@ export function New() {
     });
 
     alert("Nota criada com sucesso!");
-    navigate("/");
+    handleBack();
   }
 
   return (
